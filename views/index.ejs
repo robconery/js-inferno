@@ -10,7 +10,6 @@
 
   <!-- Le styles -->
   <link href="/stylesheets/bootstrap.css" rel="stylesheet">
-  <link href="/stylesheets/overrides.css" rel="stylesheet">
   <style>
     body {
       padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -40,9 +39,29 @@
 </div>
 
 <div class="container">
-
-  <h1>Boom Shaka-La</h1>
+  <form  method="POST" name="scorecard">
+  <div class="row">
+    <div class="span4">
+      <h2>Microsoft .NET</h2>
+      <select id="softies" size=10 multiple>
+        <option>Hanselman</option>
+        <option>Haack</option>
+        <option>Conery</option>
+        <option>Kohari</option>
+        <option>Ashton</option>
+        <option>Ayende</option>
+      </select>
+      <p align="center"><input type="button" onClick="one2two()" value=" >> "></p>
+    </div>
+    <div class="span4">
+      <h2>Rails or Node</h2>
+      <select id="hipsters" name=menu2 size=10 multiple ></select>
+      <p align="center"><input type="button" onClick="two2one()" value=" << " ></p>
+    </div>
+  </div>
+  </form>
 </div>
 
 </body>
 </html>
+<script type="text/javascript" src="/javascripts/list-items.js"></script>

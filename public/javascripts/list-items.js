@@ -27,4 +27,7 @@ function two2one() {
       m2.options[i] = null;
     }
   }
-}
+};
+
+var m1 = document.scorecard.softies;
+var m2 = document.scorecard.hipsters;
