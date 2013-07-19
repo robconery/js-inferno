@@ -1,0 +1,17 @@
+<div class="container" ng-app>
+  <div ng-controller="StoreController">
+    <h1>Orders</h1>
+    <ul>
+      <li ng-repeat="order in orders">{{order.number}}</li>
+    </ul>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  var StoreController = function($scope, $http){
+    $http.get("/api").success(function(data){
+      $scope.orders = data.orders;
+    });
+  }
+</script>

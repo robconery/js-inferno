@@ -1,0 +1,21 @@
+<div ng-controller="MonkeyController">
+  <input type="text" ng-model="monkey.name"/>
+  <button class="btn btn-success" ng-click="saveMonkey()">Save</button>
+</div>
+
+
+<script type="text/javascript">
+  var app = angular.module("monkeyApp", ['ngResource']);
+  app.service("MonkeyService", function($resource){
+    this.monkeys = $resource("/monkey");
+  });
+  app.controller("MonkeyController", function ($scope, MonkeyService) {
+
+    $scope.monkey = MonkeyService.monkeys.get();
+    $scope.saveMonkey = function(){
+      var monkey = new MonkeyService.monkeys({name : $scope.monkey.name});
+      monkey.$save();
+      alert("Monkey Saved")
+    }
+  });
+</script>

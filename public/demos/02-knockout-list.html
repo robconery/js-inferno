@@ -1,0 +1,19 @@
+<h1>Orders</h1>
+<ul data-bind="foreach:orders">
+  <li data-bind="text:number"></li>
+</ul>
+
+
+
+<script type="text/javascript">
+  var Api = function(){
+    var self = this;
+    self.orders = ko.observableArray();
+    return self;
+  }
+  var model = new Api();
+  ko.applyBindings(model);
+  $.get("/api", function(data){
+    model.orders(data.orders);
+  });
+</script>

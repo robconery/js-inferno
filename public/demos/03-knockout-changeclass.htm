@@ -1,0 +1,23 @@
+<input type="text" data-bind="value:monkey,valueUpdate: 'afterkeydown'"/>
+<div class="alert alert-error" data-bind="text:monkeySpeach, css:monkeyStatus">
+
+</div>
+
+
+<script type="text/javascript">
+  var ClassChanger = function(){
+    var self=this;
+    self.monkey = ko.observable(10);
+    self.monkeyStatus = ko.computed(function(){
+
+      return self.monkey() < 10 ? "alert-success" : "alert-error";
+    });
+    self.monkeySpeach = ko.computed(function(){
+      return self.monkey() < 10 ? "Monkey Happy" : "Monkey MAD!";
+    });
+    return self;
+  }
+
+  var model = new ClassChanger();
+  ko.applyBindings(model);
+</script>

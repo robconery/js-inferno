@@ -1,0 +1,37 @@
+
+<script type="text/backbone" id="monkey-template">
+  <input type="text" id="monkeyName" value='<%=name%>'/>
+  <button class="btn btn-success">Save</button>
+</script>
+
+<script type="text/javascript">
+  var Monkey = Backbone.Model.extend({
+    url : "/monkey"
+  });
+  var MonkeyView = Backbone.View.extend({
+    initialize : function(){
+      this.model.bind("change", this.render, this);
+    },
+    events : {
+      "click button" : "saveMonkey"
+    },
+    saveMonkey : function(){
+      var monkey = new Monkey({name : $("#monkeyName").val()});
+      monkey.save();
+      alert("Monkey name changed");
+    },
+    render : function(){
+      var template = $("#monkey-template").html();
+      var bits = this.model.toJSON();
+      var compiled = _.template(template, this.model.toJSON());
+      this.$el.html(compiled);
+      return this;
+    }
+  });
+
+  $(function(){
+    model = new Monkey();
+    var view = new MonkeyView({model : model,el : "#theView"});
+    model.fetch();
+  });
+</script>

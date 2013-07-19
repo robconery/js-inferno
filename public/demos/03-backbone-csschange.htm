@@ -1,0 +1,38 @@
+<script type="text/template" id="monkey-template">
+  <input type="text" id="monkeyBits"/>
+  <div class="alert"></div>
+</script>
+
+
+<script type="text/javascript">
+  var Monkey = Backbone.Model.extend({});
+  var MonkeyView = Backbone.View.extend({
+
+    events : {
+      "keyup input" : "checkMonkey"
+    },
+
+    checkMonkey : function(){
+      var val = parseInt($("input").val());
+      $(".alert").removeClass("alert-success").removeClass("alert-error");
+      if(val < 10){
+        $(".alert").addClass("alert-success").html("Monkey Happy");
+      }else{
+        $(".alert").addClass("alert-error").html("Monkey SMASH");
+      }
+    },
+    render : function(){
+      var template = $("#monkey-template").html();
+      var compiled = _.template(template, this.model.toJSON());
+      this.$el.html(compiled);
+      return this;
+    }
+  });
+
+  $(function(){
+    var monkey = new Monkey({counter : 1});
+    var view = new MonkeyView({model : monkey, el : "#theView"});
+    view.render();
+  });
+
+</script>

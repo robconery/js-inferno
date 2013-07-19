@@ -1,0 +1,45 @@
+<h1>Orders</h1>
+<div id="orders"></div>
+
+
+<script type="text/x-backbone" id="item-template">
+  <%=number%>
+</script>
+
+<script type="text/javascript">
+  var Monkey = Backbone.Model.extend({})
+  var MonkeyCollection = Backbone.Collection.extend({
+    model : Monkey,
+    url : "/orders"
+  });
+  var MonkeyItemView = Backbone.View.extend({
+    tagName : "li",
+    render : function(){
+      var compiled = _.template("<%=number%>",this.model.toJSON());
+      this.$el.append(compiled);
+      return this;
+    }
+  });
+  var MonkeyListView = Backbone.View.extend({
+    tagName : "ul",
+    initialize : function(){
+      this.collection.bind("reset", this.render, this);
+      this.collection.bind("add", this.render, this);
+      this.collection.bind("remove", this.render, this);
+    },
+    render : function(){
+      var self = this;
+      self.$el.empty();
+      this.collection.each(function(item){
+        self.$el.append(new MonkeyItemView({model : item}).render().el);
+      });
+      return self;
+    }
+  });
+  $(function(){
+    items = new MonkeyCollection();
+    view = new MonkeyListView({el : "#orders", collection : items});
+    items.fetch();
+  })
+
+</script>

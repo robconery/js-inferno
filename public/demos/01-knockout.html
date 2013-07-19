@@ -1,0 +1,21 @@
+
+<input type="text" data-bind="value:title" />
+<p data-bind="text:title"> </p>
+<p data-bind="text:body"></p>
+
+
+<script>
+var model = function(dump){
+    var self = this;
+    self.title = ko.observable(dump.title);
+    self.body = ko.observable(dump.description);
+
+    return self;
+    }
+$(function(){
+    $.get("/api", function(dump){
+      ko.applyBindings(new model(dump))
+    })
+});
+
+</script>

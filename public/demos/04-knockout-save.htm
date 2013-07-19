@@ -1,0 +1,27 @@
+<input type="text" data-bind="value:name"/>
+<button class="btn btn-success" data-bind="click:setName">Set</button>
+
+
+<script type="text/javascript">
+  var MonkeyModel = function(vals){
+    var self=this;
+    self.name = ko.observable(vals.name);
+    self.setName = function(){
+      var data = {name : self.name()};
+      $.post("/monkey",data , function(res){
+        alert("Name changed to " + res.name);
+      });
+    }
+    //self.thing = ko.observable();
+    return self;
+  }
+
+  $(function(){
+    $.get("/monkey", function(result){
+      var model = new MonkeyModel(result);
+      console.log(result);
+      ko.applyBindings(model);
+    })
+  });
+
+</script>

@@ -1,0 +1,14 @@
+
+<div ng-controller="ThingController">
+  <h1>{{title}}</h1>
+  <p>{{description}}</p>
+</div>
+
+<script type="text/javascript">
+  var ThingController = function($scope, $http){
+    $http.get("/api").success(function(data){
+      $scope.title = data.title;
+      $scope.description = data.description;
+    });
+  }
+</script>
