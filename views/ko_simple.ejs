@@ -1,4 +1,35 @@
 [[ include partials/head ]]
 
+<h1>Setting Up Knockout, Showing Data</h1>
+
+<div class="row">
+  <h3 data-bind="text:title"></h3>
+  <i data-bind="text:description"></i>
+</div>
+
+
+<script type="text/javascript" src="/javascripts/vendor/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/knockout.js"></script>
+
+
+<script type="text/javascript">
+  //our view model
+  var ViewModel = function(data){
+    var self = this;
+
+    self.title = ko.observable(data.title);
+    self.description = ko.observable(data.description);
+
+    return self;
+  };
+
+  $(function(){
+    $.get("/api", function(data){
+      model = new ViewModel(data);
+      ko.applyBindings(model);
+    });
+  })
+</script>
+
 [[ include partials/foot ]]
 

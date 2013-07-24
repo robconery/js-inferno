@@ -1,3 +1,73 @@
 [[ include partials/head ]]
 
+<h1>Knockout: Working with Data</h1>
+
+<div class="row">
+  <div class="span7">
+    <h3 data-bind="text:title"></h3>
+    <i data-bind="text:description"></i>
+
+    <hr>
+    <h3>Orders</h3>
+    <ul data-bind="foreach:orders">
+      <li data-bind="text:number"></li>
+    </ul>
+  </div>
+  <div class="span4">
+    <h3>Coupon</h3>
+    <div class="well">
+
+      <p>
+        <label>Current</label>
+        <strong><span data-bind="text:coupon"></span></strong>
+        <br>
+        <button class="btn btn-info" data-bind="click:getCurrentCoupon">Get Current</button>
+      </p>
+      <p>
+        <label>Change To</label>
+        <input type="text" data-bind="value:coupon"/>
+        <br>
+        <button class="btn btn-success" data-bind="click:setCurrentCoupon">Set it</button>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="/javascripts/vendor/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/knockout.js"></script>
+
+
+<script type="text/javascript">
+  //our view model
+  var ViewModel = function(data){
+    var self = this;
+
+    self.title = ko.observable(data.title);
+    self.description = ko.observable(data.description);
+    self.orders = ko.observableArray(data.orders);
+    self.coupon = ko.observable();
+
+    self.getCurrentCoupon = function(){
+      $.get("/coupon", function(data){
+        self.coupon(data.code);
+      });
+    };
+    self.setCurrentCoupon = function(){
+      $.post("/coupon", {code : self.coupon()}, function(){
+        alert("Coupon code saved");
+      });
+    }
+    return self;
+  };
+
+  $(function(){
+    $.get("/api", function(data){
+      model = new ViewModel(data);
+      ko.applyBindings(model);
+    });
+  })
+</script>
+
 [[ include partials/foot ]]
+

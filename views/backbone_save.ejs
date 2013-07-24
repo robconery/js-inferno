@@ -1,3 +1,95 @@
 [[ include partials/head ]]
 
+<h1>Backbone: Saving Data</h1>
+
+<div id="app" class="row">
+  <div id="list-view" class="span7">
+
+  </div>
+  <div id="coupon-view" class="span4">
+
+  </div>
+</div>
+
+<script type="text/x-backbone" id="coupon-template">
+  <div class="well">
+    <p>
+      <label>Code</label>
+      <input type="text" value="<%=code%>" id="coupon-code"/>
+    </p>
+    <p>
+      <button class="btn btn-success">Save</button>
+    </p>
+  </div>
+</script>
+<script type="text/javascript" src="/javascripts/vendor/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/underscore.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/backbone.js"></script>
+
+<script type="text/javascript">
+  var Coupon = Backbone.Model.extend({
+    url : "/coupon"
+  });
+  var CouponView = Backbone.View.extend({
+    initialize : function(){
+      this.model.bind("change", this.render, this);
+    },
+    events : {
+      "click button" : "saveCoupon"
+    },
+    saveCoupon : function(){
+      var code = $("#coupon-code").val();
+      var model = new Coupon({code : code});
+      model.save();
+      alert("Coupon saved!")
+    },
+    render : function(){
+      var source = $("#coupon-template").html();
+      var compiled = _.template(source, this.model.toJSON());
+      this.$el.html(compiled);
+      return this;
+    }
+  });
+  var Model = Backbone.Model.extend();
+  var Collection = Backbone.Collection.extend({
+    model : Model,
+    url : "/orders"
+  })
+  var ItemView = Backbone.View.extend({
+    tagName : "li",
+    render : function(){
+      var compiled = _.template("<%=number%>", this.model.toJSON());
+      this.$el.html(compiled);
+      return this;
+    }
+  });
+  var ListView = Backbone.View.extend({
+    tagName : "ul",
+    initialize : function(){
+      //set the event rendering triggers
+      this.collection.bind("reset", this.render, this);
+      this.collection.bind("add", this.render, this);
+      this.collection.bind("remove", this.render, this);
+    },
+    render : function(){
+      this.$el.empty();
+      var self = this;
+      this.collection.each(function(item){
+        var itemView = new ItemView({model : item});
+        self.$el.append(itemView.render().el);
+      });
+      return self;
+    }
+  });
+  var collection = new Collection();
+  var coupon = new Coupon();
+  var couponView = new CouponView({model : coupon, el : "#coupon-view"});
+  var view = new ListView({collection : collection, el : "#list-view"});
+  collection.fetch();
+  coupon.fetch();
+</script>
+
+
+
 [[ include partials/foot ]]
+

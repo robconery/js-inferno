@@ -1,3 +1,56 @@
 [[ include partials/head ]]
 
+<h1>Angular, Saving Data</h1>
+
+<div ng-app="SimpleApp">
+  <div ng-controller="SimpleController" class="row">
+    <div class="span7">
+      <h3>{{title}}</h3>
+      <i>{{description}}</i>
+      <hr>
+      <h4>Orders</h4>
+      <ul>
+        <li ng-repeat="order in orders">
+          {{order.number}}
+        </li>
+      </ul>
+    </div>
+    <div class="span4">
+      <div class="well">
+        <label>Coupon</label>
+        <input type="text" ng-model="coupon.code"/>
+        <button class="btn btn-success" ng-click="saveCoupon()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="/javascripts/vendor/angular.min.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/angular-resource.min.js"></script>
+
+<script type="text/javascript">
+  var app = angular.module("SimpleApp", ['ngResource']);
+
+  app.service("CouponService", function($resource){
+    this.coupon = $resource("/coupon");
+  });
+
+  app.controller("SimpleController", function($scope, $http, CouponService){
+    $http.get("/api").success(function(result){
+      $scope.title = result.title;
+      $scope.description = result.description;
+      $scope.orders = result.orders;
+      $scope.saveCoupon = function(){
+        var coupon = new CouponService.coupon({code : $scope.coupon.code});
+        coupon.$save(); //POST
+        alert("Coupon Saved");
+      }
+    });
+    $scope.coupon = CouponService.coupon.get();
+  });
+
+</script>
+
+
 [[ include partials/foot ]]
+

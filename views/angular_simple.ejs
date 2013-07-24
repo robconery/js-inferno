@@ -1,4 +1,28 @@
 [[ include partials/head ]]
 
+<h1>Setting Up Angular, Showing Data</h1>
+
+<div ng-app>
+  <div ng-controller="SimpleController">
+    <h3>{{title}}</h3>
+    <i>{{description}}</i>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="/javascripts/vendor/angular.min.js"></script>
+
+<script type="text/javascript">
+
+  var SimpleController = function($scope, $http){
+    $http.get("/api").success(function(result){
+      $scope.title = result.title;
+      $scope.description = result.description;
+    });
+  };
+
+</script>
+
+
 [[ include partials/foot ]]
 

@@ -30,6 +30,7 @@ var ejs = require('ejs');
 ejs.open = '[[';
 ejs.close = ']]';
 
+var store = require("./lib/store")(app);
 var routes = require("./routes")(app);
 
 http.createServer(app).listen(app.get('port'), function(){

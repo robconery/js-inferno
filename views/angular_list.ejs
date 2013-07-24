@@ -1,3 +1,42 @@
-[[ include /partials/head ]]
+[[ include partials/head ]]
 
-[[ include /partials/foot ]]
+<h1>Angular, Showing a List</h1>
+
+<div ng-app>
+  <div ng-controller="SimpleController" class="row">
+    <div class="span7">
+      <h3>{{title}}</h3>
+      <i>{{description}}</i>
+      <hr>
+      <h4>Orders</h4>
+      <ul>
+        <li ng-repeat="order in orders">
+          {{order.number}}
+          <button class="btn btn-info" ng-click="sayHi()">{{order.number}}</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="/javascripts/vendor/angular.min.js"></script>
+
+<script type="text/javascript">
+
+  var SimpleController = function($scope, $http){
+    $http.get("/api").success(function(result){
+      $scope.title = result.title;
+      $scope.description = result.description;
+      $scope.orders = result.orders;
+      $scope.sayHi = function(){
+        alert(this.order.number);
+      }
+    });
+  };
+
+</script>
+
+
+[[ include partials/foot ]]
+

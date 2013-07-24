@@ -1,3 +1,67 @@
 [[ include partials/head ]]
 
+<h1>Ember, Showing a List</h1>
+
+<script type="text/x-handlebars">
+  <div class="container">
+    {{outlet}}
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="index">
+  <h3>{{title}}</h3>
+  <i>{{description}}</i>
+  <hr>
+  {{#linkTo "orders"}} Orders {{/linkTo}}
+</script>
+
+<script type="text/x-handlebars" id="orders">
+  <h3>Orders!</h3>
+  <ul>
+    {{#each model}}
+    <li>{{number}}</li>
+    {{/each}}
+  </ul>
+</script>
+<script type="text/javascript" src="/javascripts/vendor/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/handlebars.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/ember.js"></script>
+
+<script type="text/javascript">
+  var App = Ember.Application.create();
+  App.Router.map(function(){
+    this.route("orders");
+  });
+  App.Greeting = Ember.Object.extend();
+  var greeting = App.Greeting.create();
+  App.Order = Ember.Object.extend();
+  App.Order.reopenClass({
+    load : function(){
+      var out = [];
+      $.getJSON("/orders").then(function(orders){
+        orders.forEach(function(order){
+          out.pushObject(App.Order.create(order));
+        });
+      });
+      return out;
+    }
+  })
+  App.OrdersRoute = Ember.Route.extend({
+    model : function(){
+      return App.Order.load();
+    }
+  });
+  App.IndexRoute = Ember.Route.extend({
+    model : function(){
+      return greeting;
+    }
+  });
+  $(function(){
+    $.getJSON("/api", function(data){
+      greeting.setProperties(data);
+    })
+  })
+
+</script>
+
 [[ include partials/foot ]]

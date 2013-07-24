@@ -1,4 +1,50 @@
 [[ include partials/head ]]
 
+  <h1>Backbone: Setting Up, Showing Data</h1>
+
+  <div id="app-view">
+
+  </div>
+
+<script type="text/x-backbone" id="view-template">
+  <h3><%=title%></h3>
+  <i><%=description%></i>
+</script>
+
+<script type="text/javascript" src="/javascripts/vendor/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/underscore.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/backbone.js"></script>
+
+<script type="text/javascript">
+
+  var Model = Backbone.Model.extend({
+    url : "/api"
+  });
+
+  var View = Backbone.View.extend({
+
+    initialize : function(){
+      this.model.bind("change", this.render, this);
+    },
+
+    render : function(){
+      //get the template for the view
+      var source = $("#view-template").html();
+      //compile it
+      var compiled = _.template(source, this.model.toJSON());
+      //inject it to the DOM
+      this.$el.html(compiled);
+
+      return this;
+    }
+  });
+
+  var model = new Model();
+  var view = new View({model : model, el : "#app-view"});
+  model.fetch();
+</script>
+
+
+
 [[ include partials/foot ]]
 

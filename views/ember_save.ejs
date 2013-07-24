@@ -1,3 +1,97 @@
 [[ include partials/head ]]
 
+<h1>Ember, Saving Data</h1>
+
+<script type="text/x-handlebars">
+  <div class="container">
+    {{outlet}}
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="index">
+  <h3>{{title}}</h3>
+  <i>{{description}}</i>
+  <hr>
+  {{#linkTo "orders"}} Orders {{/linkTo}} |
+  {{#linkTo "coupon"}} Coupon {{/linkTo}}
+</script>
+
+<script type="text/x-handlebars" id="orders">
+  <h3>Orders!</h3>
+  <ul>
+    {{#each model}}
+    <li>{{number}}</li>
+    {{/each}}
+  </ul>
+</script>
+
+<script type="text/x-handlebars" id="coupon">
+  <h3>Coupon</h3>
+  <label>Change the Code</label>
+  {{input value = model.code type="text"}}
+  <button class="btn btn-info" {{action "saveCoupon"}}>Go</button>
+</script>
+
+<script type="text/javascript" src="/javascripts/vendor/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/handlebars.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/ember.js"></script>
+
+<script type="text/javascript">
+  var App = Ember.Application.create();
+  App.Router.map(function(){
+    this.route("orders");
+    this.route("coupon");
+  });
+
+  App.Coupon = Ember.Object.extend();
+  var coupon = App.Coupon.create();
+
+  App.Greeting = Ember.Object.extend();
+  var greeting = App.Greeting.create();
+
+  App.Order = Ember.Object.extend();
+  App.Order.reopenClass({
+    load : function(){
+      var out = [];
+      $.getJSON("/orders").then(function(orders){
+        orders.forEach(function(order){
+          out.pushObject(App.Order.create(order));
+        });
+      });
+      return out;
+    }
+  })
+  App.OrdersRoute = Ember.Route.extend({
+    model : function(){
+      return App.Order.load();
+    }
+  });
+  App.CouponRoute = Ember.Route.extend({
+    model : function(){
+      $.getJSON("/coupon").then(function(result){
+        coupon.setProperties(result);
+      });
+      return coupon;
+    }
+  });
+  App.CouponController = Ember.Controller.extend({
+    saveCoupon : function(){
+      $.post("/coupon", {code : coupon.get("code")}, function(){
+        alert("Coupon Saved");
+      });
+    }
+  })
+  App.IndexRoute = Ember.Route.extend({
+    model : function(){
+      return greeting;
+    }
+  });
+  $(function(){
+    $.getJSON("/api", function(data){
+      greeting.setProperties(data);
+    })
+  })
+
+</script>
+
 [[ include partials/foot ]]

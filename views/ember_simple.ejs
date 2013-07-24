@@ -1,4 +1,40 @@
 [[ include partials/head ]]
 
+  <h1>Setting Up Ember, Showing Data</h1>
+
+<script type="text/x-handlebars">
+  <div class="container">
+    {{outlet}}
+  </div>
+</script>
+<script type="text/x-handlebars" id="index">
+  <h3>{{title}}</h3>
+  <i>{{description}}</i>
+</script>
+
+<script type="text/javascript" src="/javascripts/vendor/jquery.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/handlebars.js"></script>
+<script type="text/javascript" src="/javascripts/vendor/ember.js"></script>
+
+<script type="text/javascript">
+  var App = Ember.Application.create();
+
+  App.Greeting = Ember.Object.extend();
+  var greeting = App.Greeting.create();
+
+  App.IndexRoute = Ember.Route.extend({
+    model : function(){
+      return greeting;
+    }
+  });
+
+  $(function(){
+    $.getJSON("/api", function(data){
+      greeting.setProperties(data);
+    })
+  })
+
+</script>
+
 [[ include partials/foot ]]
 
